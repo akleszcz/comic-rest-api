@@ -1,0 +1,10 @@
+{
+	"status":"success",
+	"data":[
+		"http://localhost:3001/images/volume1/chapter1/thumbnails/page1.png",
+		"http://localhost:3001/images/volume1/chapter1/thumbnails/page2.png",
+		"http://localhost:3001/images/volume1/chapter1/thumbnails/page3.png",
+		"http://localhost:3001/images/volume1/chapter1/thumbnails/page4.png",
+		"http://localhost:3001/images/volume1/chapter1/thumbnails/page5.png"
+	]
+}
