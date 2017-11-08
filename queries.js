@@ -5,11 +5,11 @@ let options = {
   promiseLib: promise
 };
 
-let pgp = require('pg-promise')(options);
+/*let pgp = require('pg-promise')(options);
 var config = require('./config.json');
 let connectionString = config.connectionString;
 console.log(connectionString);
-let db = pgp(connectionString);
+let db = pgp(connectionString);*/
 
 var path = __dirname + '/public/json/';
 
