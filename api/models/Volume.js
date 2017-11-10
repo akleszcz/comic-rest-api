@@ -16,4 +16,4 @@ var VolumeSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model('Volume', VolumeSchema, 'volumes');
+module.exports = mongoose.model('Volume', VolumeSchema);

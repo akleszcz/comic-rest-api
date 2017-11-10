@@ -2,7 +2,8 @@ var express = require('express'),
   app = express(),
   port = process.env.PORT || 3000,
   mongoose = require('mongoose'),
-  Task = require('./api/models/Volume'), //created model loading here
+  Volume = require('./api/models/Volume'),
+  Chapter = require('./api/models/Chapter'),
   bodyParser = require('body-parser');
 
 // mongoose instance connection url connection
@@ -21,8 +22,19 @@ app.use(function(req, res, next) {
 
 
 
-var routes = require('./api/routes/volumes');
-routes(app);
+//var routes = require('./api/routes/volumes');//require('./api/routes/volumes');
+//routes(app);
+
+var volumes = require('./api/routes/volumes');//require('./api/routes/volumes');
+var chapters = require('./api/routes/chapters');
+volumes(app);
+chapters(app);
+
+/*var volumes = require('./api/routes/volumes');
+var chapters = require('./api/routes/chapters');
+
+app.use('/volumes', volumes);
+app.use('/chapters', chapters);*/
 
 
 app.listen(port);
