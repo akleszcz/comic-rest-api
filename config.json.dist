@@ -1,3 +1,0 @@
-{
-    connectionString: 'postgres://user:password@host:port/comics'
-}
