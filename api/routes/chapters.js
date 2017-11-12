@@ -5,7 +5,7 @@ module.exports = function(app) {
   app.route('/api/chapters')
     .get(chapter.getChapters);
 
-  app.route('/volumes/:volumeNumber/chapters/:number')
+  app.route('/api/volumes/:volumeNumber/chapters/:number')
     .get(chapter.getChapterByNumber)
 };
 
