@@ -3,7 +3,10 @@ module.exports = function(app) {
   var chapter = require('../controllers/Chapter');
 
   app.route('/api/chapters')
-    .get(chapter.getChapters)
+    .get(chapter.getChapters);
+
+  app.route('/volumes/:volumeNumber/chapters/:number')
+    .get(chapter.getChapterByNumber)
 };
 
 /*var express = require('express');

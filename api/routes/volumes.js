@@ -3,7 +3,7 @@ module.exports = function(app) {
   var volume = require('../controllers/Volume');
 
   app.route('/api/volumes')
-    .get(volume.getVolumes)
+    .get(volume.getVolumes);
 };
 
 /*var express = require('express');
