@@ -13,8 +13,14 @@ exports.getChapters = function(req, res) {
 
 exports.getChapterByNumber = function(req, res) {
   Chapter.findOne({number: req.params.number, volume_number: req.params.volumeNumber}, function(err, chapter) {
-    if (err)
+    if (err) {
       res.send(err);
-    res.json(chapter.thumbnails);
+    }
+    else if (chapter) {
+      res.json(chapter.thumbnails);
+    }
+    else {
+      res.json([]);
+    }
   });
 };

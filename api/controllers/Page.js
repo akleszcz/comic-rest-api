@@ -25,18 +25,30 @@ exports.getPageByNumber = function(req, res) { //returns page url and number of 
               .sort({order_number: 1})
               .skip (req.params.number - 1)
               .limit(1)
-              .exec(function(err, page) {
-                if (err)
+              .exec(function(err, pages) {
+                if (err) {
                   return callback(err);
-                locals.url = page[0].url;
+                }
+                else if (pages[0]) {
+                  locals.url = pages[0].url;
+                }
+                else {
+                  locals.url = '';
+                }
                 callback();
               });
             },
             function(callback) {
                 Chapter.findOne({number: req.params.chapterNumber, volume_number: req.params.volumeNumber}, { thumbnails: 1, _id: 0 }, function(err, chapter) {
-                  if (err)
+                  if (err) {
                     return callback(err);
-                  locals.numberOfPages = chapter.thumbnails.length;
+                  }
+                  else if (chapter.thumbnails) {
+                    locals.numberOfPages = chapter.thumbnails.length;
+                  }
+                  else {
+                    locals.numberOfPages = 0;
+                  }
                   callback();
                 });
             }
