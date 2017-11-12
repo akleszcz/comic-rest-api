@@ -4,6 +4,7 @@ var express = require('express'),
   mongoose = require('mongoose'),
   Volume = require('./api/models/Volume'),
   Chapter = require('./api/models/Chapter'),
+  Page = require('./api/models/Page'),
   bodyParser = require('body-parser');
 
 // mongoose instance connection url connection
@@ -27,8 +28,10 @@ app.use(function(req, res, next) {
 
 var volumes = require('./api/routes/volumes');//require('./api/routes/volumes');
 var chapters = require('./api/routes/chapters');
+var pages = require('./api/routes/pages');
 volumes(app);
 chapters(app);
+pages(app);
 
 /*var volumes = require('./api/routes/volumes');
 var chapters = require('./api/routes/chapters');
