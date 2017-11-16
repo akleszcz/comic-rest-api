@@ -1,0 +1,6 @@
+module.exports = {
+
+    'secret': 'secrethere',
+    'database': 'mongodb-connection-string'
+
+};
