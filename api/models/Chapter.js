@@ -1,20 +1,21 @@
 'use strict';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var shortid = require('shortid');
 
 
 var ChapterSchema = new Schema({
-  number: {
-    type: Number,
-    required: true
+  id: {
+    type: String,
+    'default': shortid.generate
   },
-  volume_number: {
-    type: Number,
-    required: true
-  },
-  thumbnails: {
-    type: []
-  }
+  thumbnails: [{
+    id: {
+      type: String,
+      'default': shortid.generate
+    },
+    url: String
+     }]
 });
 
 module.exports = mongoose.model('Chapter', ChapterSchema);

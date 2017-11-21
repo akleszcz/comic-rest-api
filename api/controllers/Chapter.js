@@ -4,23 +4,32 @@ var mongoose = require('mongoose'),
 Chapter = mongoose.model('Chapter');
 
 exports.getChapters = function(req, res) {
-  Chapter.find({}, function(err, task) {
+  Chapter.find({}, {"_id": 0}, function(err, task) {
     if (err)
       res.send(err);
     res.json(task);
   });
 };
 
-exports.getChapterByNumber = function(req, res) {
-  Chapter.findOne({number: req.params.number, volume_number: req.params.volumeNumber}, function(err, chapter) {
+exports.getChapterById = function(req, res) {
+  Chapter.findOne({id: req.params.id}, {"_id": 0}, function(err, chapter) {
     if (err) {
       res.send(err);
     }
     else if (chapter) {
-      res.json(chapter.thumbnails);
+      res.json(chapter);
     }
     else {
-      res.json([]);
+      res.json({});
     }
+  });
+};
+
+exports.createChapter = function(req, res) {
+  var newChapter = new Chapter(req.body);
+  newChapter.save(function(err, task) {
+    if (err)
+      res.send(err);
+    res.json(task);
   });
 };

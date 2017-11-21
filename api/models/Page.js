@@ -1,20 +1,21 @@
 'use strict';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-
+var shortid = require('shortid');
 
 var PageSchema = new Schema({
-  order_number: {
-    type: Number,
-    required: true
+  id: {
+    type: String,
+    'default': shortid.generate
   },
-  chapter_number: {
-    type: Number,
-    required: true
+  chapter_id: {
+    type: String
   },
-  volume_number: {
-    type: Number,
-    required: true
+  previous_page_id: {
+    type: String
+  },
+  next_page_id: {
+    type: String
   },
   url: {
     type: String,

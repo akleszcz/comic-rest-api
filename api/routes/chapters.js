@@ -3,10 +3,11 @@ module.exports = function(app) {
   var chapter = require('../controllers/Chapter');
 
   app.route('/api/chapters')
-    .get(chapter.getChapters);
+    .get(chapter.getChapters)
+    .post(chapter.createChapter);
 
-  app.route('/api/volumes/:volumeNumber/chapters/:number')
-    .get(chapter.getChapterByNumber)
+  app.route('/api/chapters/:id')
+    .get(chapter.getChapterById)
 };
 
 /*var express = require('express');
