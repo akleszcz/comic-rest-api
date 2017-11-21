@@ -47,14 +47,17 @@ exports.getPageById = function(req, res) { //returns page url and number of page
       let result = [];
       return Chapter.findOne({id: page.chapter_id}).exec()
         .then(function(chapter){
-          return [page, chapter];
+          const thumbnails = chapter.thumbnails;
+          const pageNumber = thumbnails.indexOf(thumbnails.find(p => p.id === page.id)) + 1;
+          const firstPageId = thumbnails[0].id;
+          const lastPageId = thumbnails[thumbnails.length-1].id;
+
+          return {page, number_of_pages: chapter.thumbnails.length, number: pageNumber, first_page_id: firstPageId, last_page_id: lastPageId};
         });
     })
-    .then(function(result){
-      let page = result[0];
-      let chapter = result[1];
+    .then(function({page, number_of_pages, number, first_page_id, last_page_id}){
       let {id, previous_page_id, next_page_id, url} = page;
-      res.json({ id, previous_page_id, next_page_id, url, number_of_pages: chapter.thumbnails.length});
+      res.json({ id, previous_page_id, next_page_id, url, number_of_pages, number, first_page_id, last_page_id});
     })
     .then(undefined, function(err){
       //Handle error
