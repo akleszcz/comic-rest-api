@@ -2,7 +2,7 @@
 
 var mongoose = require('mongoose'),
 Page = mongoose.model('Page'),
-Chapter = mongoose.model('Chapter'),
+//Chapter = mongoose.model('Chapter'),
 async = require('async');
 
 /*exports.getPageByNumber = function(req, res) {
@@ -42,7 +42,7 @@ exports.getPageById = function(req, res) { //returns page url and number of page
           res.json(locals)
         );*/
 
-  Page.findOne({id: req.params.id}).exec()
+  /*Page.findOne({id: req.params.id}).exec()
     .then(function(page){
       let result = [];
       return Chapter.findOne({id: page.chapter_id}).exec()
@@ -61,5 +61,16 @@ exports.getPageById = function(req, res) { //returns page url and number of page
     })
     .then(undefined, function(err){
       //Handle error
-    })
+    })*/
+    Page.findOne({id: req.params.id}, {"_id": 0}, function(err, page) {
+      if (err) {
+        res.send(err);
+      }
+      else if (page) {
+        res.json(page);
+      }
+      else {
+        res.json("Page not found.");
+      }
+    });
 };
