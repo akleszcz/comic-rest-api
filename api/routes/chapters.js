@@ -1,10 +1,13 @@
 'use strict';
+var auth = require('./auth');
+
 module.exports = function(app) {
+
   var chapter = require('../controllers/Chapter');
 
   app.route('/api/chapters')
     .get(chapter.getChapters)
-    .post(chapter.createChapter);
+    .post(auth.authenticate, auth.authorize, chapter.createChapter);
 
   app.route('/api/chapters/:id')
     .get(chapter.getChapterById)

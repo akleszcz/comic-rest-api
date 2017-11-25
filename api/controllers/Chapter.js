@@ -26,7 +26,7 @@ exports.getChapterById = function(req, res) {
 };
 
 exports.createChapter = function(req, res) {
-  var newChapter = new Chapter(req.body);
+  const newChapter = new Chapter();
   newChapter.save(function(err, task) {
     if (err)
       res.send(err);

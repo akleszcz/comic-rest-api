@@ -37,7 +37,7 @@ exports.loginUser = function(req, res) {
         res.json({ success: false, message: 'Password incorrect.' });
       }
       else {
-        const payload = {
+        const payload =  {
           admin: user.admin
         };
         var token = jwt.sign(payload, config.secret, {

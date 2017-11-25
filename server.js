@@ -32,7 +32,7 @@ app.use(function(req, res, next) {
 //var routes = require('./api/routes/volumes');//require('./api/routes/volumes');
 //routes(app);
 
-var volumes = require('./api/routes/volumes');//require('./api/routes/volumes');
+var volumes = require('./api/routes/volumes');
 var chapters = require('./api/routes/chapters');
 var pages = require('./api/routes/pages');
 var users = require('./api/routes/users');
