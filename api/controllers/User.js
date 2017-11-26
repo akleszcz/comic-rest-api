@@ -47,6 +47,8 @@ exports.loginUser = function(req, res) {
         res.json({
           success: true,
           message: 'Logged in successfully',
+          login: user.login,
+          admin: user.admin,
           token: token
         });
       }
