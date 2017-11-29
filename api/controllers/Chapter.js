@@ -1,7 +1,8 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-Chapter = mongoose.model('Chapter');
+Chapter = mongoose.model('Chapter'),
+Volume = mongoose.model('Volume');
 
 exports.getChapters = function(req, res) {
   Chapter.find({}, {"_id": 0}, function(err, task) {
@@ -26,10 +27,50 @@ exports.getChapterById = function(req, res) {
 };
 
 exports.createChapter = function(req, res) {
+
   const newChapter = new Chapter();
-  newChapter.save(function(err, task) {
+  //let chapterId;
+  newChapter.save(function(err, chapter) {
     if (err)
       res.send(err);
-    res.json(task);
-  });
+    //res.json(chapter);
+    return chapter;
+
+  })
+  .then ((chapter) =>
+    Volume.findOneAndUpdate({id: req.body.volume_id}, {
+      $push: {
+              chapters: {
+              $each: [{
+              id: chapter.id,
+              title: req.body.title
+            }], $position: parseInt(req.body.position)
+          }
+        }
+      },
+      function(err, volume) {
+        if (err) {
+          res.send(err);
+        }
+        res.json({
+          success: true,
+          message: 'Chapter created successfully',
+          id: chapter.id
+        });
+      })
+  );
+
+  /*
+  /*Volume.findOne({id: req.body.volume_id}, function(err, volume) {
+    if (err) {
+      res.send(err);
+    }
+    else if (volume) {
+      volume.chapters.splice(req.body.index, 0, { id: res.locals.id, title: req.body.title });
+      res.json({
+        success: true,
+        message: 'Chapter created successfully'
+      });
+    }
+  });*/
 };
