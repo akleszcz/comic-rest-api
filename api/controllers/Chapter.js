@@ -55,7 +55,12 @@ exports.createChapter = function(req, res) {
         res.json({
           success: true,
           message: 'Chapter created successfully',
-          id: chapter.id
+          chapter: {
+            id: chapter.id,
+            title: req.body.title,
+            position: req.body.position,
+            volume_id: volume.id
+          }
         });
       })
   );
