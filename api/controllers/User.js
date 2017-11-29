@@ -38,6 +38,7 @@ exports.loginUser = function(req, res) {
       }
       else {
         const payload =  {
+          login: user.login,
           admin: user.admin
         };
         var token = jwt.sign(payload, config.secret, {
@@ -53,5 +54,16 @@ exports.loginUser = function(req, res) {
         });
       }
     }
+  });
+};
+
+exports.getUser = function(req, res) {
+  User.findOne({ login: req.decoded.login }, function(err, user) {
+    if (err) throw err;
+    res.json({
+      success: true,
+      login: req.decoded.login,
+      admin: req.decoded.admin
+    });
   });
 };
