@@ -49,9 +49,8 @@ exports.createChapter = function(req, res) {
         }
       },
       function(err, volume) {
-        if (err) {
+        if (err)
           res.send(err);
-        }
         res.json({
           success: true,
           message: 'Chapter created successfully',
@@ -64,18 +63,21 @@ exports.createChapter = function(req, res) {
         });
       })
   );
+}
 
-  /*
-  /*Volume.findOne({id: req.body.volume_id}, function(err, volume) {
-    if (err) {
+exports.removeChapter = function(req, res) {
+  Chapter.remove({ id: req.params.chapter_id }, function (err) {
+    if (err)
       res.send(err);
-    }
-    else if (volume) {
-      volume.chapters.splice(req.body.index, 0, { id: res.locals.id, title: req.body.title });
-      res.json({
+  })
+  .then(() => {
+    Volume.update( { id: req.params.volume_id }, { $pull: { chapters: { id: req.params.chapter_id } } }, function (err, task) {
+      if (err)
+        res.send(err);
+      res.send({
         success: true,
-        message: 'Chapter created successfully'
+        message: 'Chapter removed successfully.'
       });
-    }
-  });*/
+    });
+  });
 };

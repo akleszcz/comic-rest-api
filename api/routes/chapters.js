@@ -10,7 +10,10 @@ module.exports = function(app) {
     .post(auth.authenticate, auth.authorize, chapter.createChapter);
 
   app.route('/api/chapters/:id')
-    .get(chapter.getChapterById)
+    .get(chapter.getChapterById);
+
+  app.route('/api/volumes/:volume_id/chapters/:chapter_id')
+    .delete(auth.authenticate, auth.authorize, chapter.removeChapter)
 };
 
 /*var express = require('express');
