@@ -96,45 +96,45 @@ exports.createPage = function(req, res) { /* params: url, thumbnail_url, chapter
       if (thumbnails[nextPageIndex]) {
         nextPageId = thumbnails[nextPageIndex].id;
       }
-      chapter.save();
       res.locals.nextPageId = nextPageId;
+      chapter.save()
+      .then(() => { //Save new page
+          const newPage = new Page({
+            id: res.locals.newPageId,
+            url: req.body.url,
+            previous_page_id: req.body.previous_page_id ? req.body.previous_page_id : null,
+            next_page_id: res.locals.nextPageId,
+            chapter_id: req.body.chapter_id
+          });
+          newPage.save(function(err, page) {
+            if (err) {
+              res.send(err);
+            }
+            res.json({
+              success: true,
+              message: 'Page created successfully',
+              page: page,
+              locals: res.locals ? res.locals : 'res.locals is not defined'
+            });
+          })
+          .then(() => { //Update previous page if exists
+            Page.findOneAndUpdate({ id: req.body.previous_page_id }, { $set: { next_page_id: res.locals.newPageId } }, function(err, page) {
+              if(err){
+                res.send(err);
+              }
+            });
+          })
+          .then(() => { //Update next page if exists
+            Page.findOneAndUpdate({ id: res.locals.nextPageId }, { $set: { previous_page_id: res.locals.newPageId } }, function(err, page){
+              if(err){
+                res.send(err);
+              }
+            });
+          });
+        });
     }
     else {
       res.json("Chapter not found.");
     }
-  })
-  .then(() => { //Save new page
-    const newPage = new Page({
-      id: res.locals.newPageId,
-      url: req.body.url,
-      previous_page_id: req.body.previous_page_id ? req.body.previous_page_id : null,
-      next_page_id: res.locals.nextPageId,
-      chapter_id: req.body.chapter_id
-    });
-    newPage.save(function(err, page) {
-      if (err) {
-        res.send(err);
-      }
-      res.json({
-        success: true,
-        message: 'Page created successfully',
-        page: page,
-        locals: res.locals
-      });
-    })
-  })
-  .then(() => { //Update previous page if exists
-    Page.findOneAndUpdate({ id: req.body.previous_page_id }, { $set: { next_page_id: res.locals.newPageId } }, function(err, page) {
-      if(err){
-        res.send(err);
-      }
-    });
-  })
-  .then(() => { //Update next page if exists
-    Page.findOneAndUpdate({ id: res.locals.nextPageId }, { $set: { previous_page_id: res.locals.newPageId } }, function(err, page){
-      if(err){
-        res.send(err);
-      }
-    });
   });
 }
