@@ -27,32 +27,39 @@ exports.loginUser = function(req, res) {
     login: req.body.login
   }, function(err, user) {
 
-    if (err) throw err;
+    if (err) {
+      throw err;
+    }
 
     if (!user) {
       res.json({ success: false, message: 'User not found.' });
     }
     else {
-      if (user.password != req.body.password) {
-        res.json({ success: false, message: 'Password incorrect.' });
-      }
-      else {
-        const payload =  {
-          login: user.login,
-          admin: user.admin
-        };
-        var token = jwt.sign(payload, config.secret, {
-          expiresIn : 60*60*24 // expires in 24 hours
-        });
+      user.comparePassword(req.body.password, function(err, isMatch) {
+        if (err) {
+          throw err;
+        }
+        if (isMatch !== true) {
+          res.json(401, { success: false, message: 'Password incorrect.', is_match: isMatch });
+        }
+        else {
+          const payload =  {
+            login: user.login,
+            admin: user.admin
+          };
+          var token = jwt.sign(payload, config.secret, {
+            expiresIn : 60*60*24 // expires in 24 hours
+          });
 
-        res.json({
-          success: true,
-          message: 'Logged in successfully',
-          login: user.login,
-          admin: user.admin,
-          token: token
-        });
-      }
+          res.json(200, {
+            success: true,
+            message: 'Logged in successfully',
+            login: user.login,
+            admin: user.admin,
+            token: token
+          });
+        }
+      });
     }
   });
 };
