@@ -80,41 +80,30 @@ exports.createPage = function(req, res) { /* params: url, thumbnail_url, chapter
     if (err) {
       res.send(err);
     }
-    else if (chapter) {
+    else if (chapter) { /*Save page thumbnail url in chapter's thumbnails array, generate new page id*/
       const thumbnails = chapter.thumbnails;
       let nextPageId = null;
+      let previousPageIndex = -1;
       if (req.body.previous_page_id) {
-        const previousPageIndex = thumbnails.findIndex(p => p.id === req.body.previous_page_id);
-        if (previousPageIndex === -1) {
-          res.json("Previous page not found.");
-        }
-        if (previousPageIndex + 1 < thumbnails.length) {
-          nextPageId = thumbnails[previousPageIndex + 1].id;
-        }
-        thumbnails.splice(previousPageIndex + 1, 0, {
-          url: req.body.thumbnail_url
-        });
-        chapter.save();
-        res.locals.newPageId = chapter.thumbnails[previousPageIndex + 1].id;
+        previousPageIndex = thumbnails.findIndex(p => p.id === req.body.previous_page_id);
       }
-      else {
-        if (thumbnails.length > 0) {
-          nextPageId = thumbnails[0].id;
-        }
-        thumbnails.unshift({
-         url: req.body.thumbnail_url
-        });
-        chapter.save();
-        res.locals.newPageId = chapter.thumbnails[0].id;
+      const newPageIndex = previousPageIndex + 1;
+      const nextPageIndex = previousPageIndex + 2;
+      thumbnails.splice(newPageIndex, 0, {
+        url: req.body.thumbnail_url
+      });
+      res.locals.newPageId = chapter.thumbnails[newPageIndex].id;
+      if (thumbnails[nextPageIndex]) {
+        nextPageId = thumbnails[nextPageIndex].id;
       }
+      chapter.save();
       res.locals.nextPageId = nextPageId;
-      //res.json({ previous_page_id: req.body.previous_page_id ? req.body.previous_page_id : null });
     }
     else {
       res.json("Chapter not found.");
     }
   })
-  .then(() => {
+  .then(() => { //Save new page
     const newPage = new Page({
       id: res.locals.newPageId,
       url: req.body.url,
@@ -132,5 +121,19 @@ exports.createPage = function(req, res) { /* params: url, thumbnail_url, chapter
         page: page
       });
     })
+  })
+  .then(() => { //Update previous page if exists
+    Page.findOneAndUpdate({ id: req.body.previous_page_id }, { $set: { next_page_id:res.locals.newPageId } } , function(err, page) {
+      if(err){
+        res.send(err);
+      }
+    });
+  })
+  .then(() => { //Update next page if exists
+    Page.findOneAndUpdate({ id: res.locals.nextPageId }, { $set: { previous_page_id: res.locals.newPageId } }, function(err, page){
+      if(err){
+        res.send(err);
+      }
+    });
   });
 }
