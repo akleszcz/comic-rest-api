@@ -35,7 +35,6 @@ exports.createChapter = function(req, res) {
       res.send(err);
     //res.json(chapter);
     return chapter;
-
   })
   .then ((chapter) =>
     Volume.findOneAndUpdate({id: req.body.volume_id}, {

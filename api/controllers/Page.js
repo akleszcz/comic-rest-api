@@ -2,7 +2,7 @@
 
 var mongoose = require('mongoose'),
 Page = mongoose.model('Page'),
-//Chapter = mongoose.model('Chapter'),
+Chapter = mongoose.model('Chapter'),
 async = require('async');
 
 /*exports.getPageByNumber = function(req, res) {
@@ -74,3 +74,63 @@ exports.getPageById = function(req, res) { //returns page url and number of page
       }
     });
 };
+
+exports.createPage = function(req, res) { /* params: url, thumbnail_url, chapter_id, previous_page_id */
+  Chapter.findOne({id: req.body.chapter_id}, function(err, chapter) {
+    if (err) {
+      res.send(err);
+    }
+    else if (chapter) {
+      const thumbnails = chapter.thumbnails;
+      let nextPageId = null;
+      if (req.body.previous_page_id) {
+        const previousPageIndex = thumbnails.findIndex(p => p.id === req.body.previous_page_id);
+        if (previousPageIndex === -1) {
+          res.json("Previous page not found.");
+        }
+        if (previousPageIndex + 1 < thumbnails.length) {
+          nextPageId = thumbnails[previousPageIndex + 1].id;
+        }
+        thumbnails.splice(previousPageIndex + 1, 0, {
+          url: req.body.thumbnail_url
+        });
+        chapter.save();
+        res.locals.newPageId = chapter.thumbnails[previousPageIndex + 1].id;
+      }
+      else {
+        if (thumbnails.length > 0) {
+          nextPageId = thumbnails[0].id;
+        }
+        thumbnails.unshift({
+         url: req.body.thumbnail_url
+        });
+        chapter.save();
+        res.locals.newPageId = chapter.thumbnails[0].id;
+      }
+      res.locals.nextPageId = nextPageId;
+      //res.json({ previous_page_id: req.body.previous_page_id ? req.body.previous_page_id : null });
+    }
+    else {
+      res.json("Chapter not found.");
+    }
+  })
+  .then(() => {
+    const newPage = new Page({
+      id: res.locals.newPageId,
+      url: req.body.url,
+      previous_page_id: req.body.previous_page_id ? req.body.previous_page_id : null,
+      next_page_id: res.locals.nextPageId,
+      chapter_id: req.body.chapter_id
+    });
+    newPage.save(function(err, page) {
+      if (err) {
+        res.send(err);
+      }
+      res.json({
+        success: true,
+        message: 'Page created successfully',
+        page: page
+      });
+    })
+  });
+}
