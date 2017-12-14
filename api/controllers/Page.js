@@ -113,8 +113,7 @@ exports.createPage = function(req, res) { /* params: url, thumbnail_url, chapter
             res.json({
               success: true,
               message: 'Page created successfully',
-              page: page,
-              locals: res.locals ? res.locals : 'res.locals is not defined'
+              page: page
             });
           })
           .then(() => { //Update previous page if exists
