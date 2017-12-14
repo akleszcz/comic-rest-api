@@ -118,12 +118,13 @@ exports.createPage = function(req, res) { /* params: url, thumbnail_url, chapter
       res.json({
         success: true,
         message: 'Page created successfully',
-        page: page
+        page: page,
+        locals: res.locals
       });
     })
   })
   .then(() => { //Update previous page if exists
-    Page.findOneAndUpdate({ id: req.body.previous_page_id }, { $set: { next_page_id:res.locals.newPageId } } , function(err, page) {
+    Page.findOneAndUpdate({ id: req.body.previous_page_id }, { $set: { next_page_id: res.locals.newPageId } }, function(err, page) {
       if(err){
         res.send(err);
       }
