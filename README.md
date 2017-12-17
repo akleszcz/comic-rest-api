@@ -1,7 +1,7 @@
 # Comic REST API
 ## Getting started
 
-API server is running at https://comic-rest.azurewebsites.net/api
+API server is running at https://comic-rest.azurewebsites.net/api   
 Example endpoint: https://comic-rest.azurewebsites.net/api/volumes
 
 To run this project locally:
