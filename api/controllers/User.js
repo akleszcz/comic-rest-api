@@ -32,7 +32,7 @@ exports.loginUser = function(req, res) {
     }
 
     if (!user) {
-      res.json({ success: false, message: 'User not found.' });
+      res.json(404, { success: false, message: 'User not found.' });
     }
     else {
       user.comparePassword(req.body.password, function(err, isMatch) {
